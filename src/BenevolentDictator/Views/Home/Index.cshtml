@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = "Benevolent Dictator";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Benevolent Dictator</h1>
+
+<p>Welcome page with info about game and links to register/login/start playing.</p>
+
+@Html.ActionLink("Register", "Register", "Account")
+@Html.ActionLink("Login","Login", "Account")

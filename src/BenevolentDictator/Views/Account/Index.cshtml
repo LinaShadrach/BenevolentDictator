@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Account Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using System.Security.Claims
+
+
+<div class="container">
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <h4>Hello @User.Identity.Name!</h4>
+
+        <hr />
+
+    }
+    else
+    {
+        <p>@Html.ActionLink("Register", "Register")</p>
+        <p>@Html.ActionLink("Log in", "Login")</p>
+    }
+</div>
