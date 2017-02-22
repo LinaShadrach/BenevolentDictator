@@ -1,0 +1,42 @@
+Benevolent Dictator
+
+Goverment types:
+Democracy
+Monarchy
+Autocracy
+Oligarchy
+Anarchy
+
+Economy types:
+Capitalism
+Socialism
+Communism
+
+
+Disasters:
+Weather event
+Earthquake
+Market crash
+Solar flare
+Attack on nation
+Plague
+
+
+Good things:
+Technological advancement
+New resources discovered
+Gift from another nation
+International glory
+Historical discovery
+
+
+
+Nation:
+Government Type
+Economy Type
+Geography Type
+Capital
+Resources
+Population
+Stability
+User
