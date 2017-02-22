@@ -1,5 +1,31 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Benevolent Dictator";
 }
+@model BenevolentDictator.Models.Nation
+
+<h1>Create your nation!</h1>
+
+<form asp-action="Create" asp-controller ="Nation">
+    <label asp-for="Name">Name: </label>
+    <input type="text" asp-for="Name"/>
+    <select asp-for="GovernmentId">
+        @foreach (var government in ViewBag.Governments)
+        {
+            <option value="@government.Id">@government.Name</option>
+        }
+    </select>
+    <select asp-for="EconomyId">
+        @foreach (var economy in ViewBag.Economies)
+        {
+            <option value="@economy.Id">@economy.Name</option>
+        }
+    </select>
+    <select asp-for="GeographyId">
+        @foreach (var geography in ViewBag.Geographies)
+        {
+            <option value="@geography.Id">@geography.Name</option>
+        }
+    </select>
+    <button type="submit">Submit</button>
+</form>
