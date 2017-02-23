@@ -129,5 +129,18 @@ namespace BenevolentDictator.Controllers
             nationRepo.Edit(thisNation);
             return Json(thisNation);
         }
+        [HttpPost]
+        public IActionResult ToggleTrade(int nationId)
+        {
+            Nation thisNation = nationRepo.Nations.FirstOrDefault(n => n.Id == nationId);
+            thisNation.ToggleTrade();
+            nationRepo.Edit(thisNation);
+            string result = "Normal";
+            if (thisNation.TradeHigh)
+            {
+                result = "High Trade";
+            }
+            return Json(result);
+        }
     }
 }

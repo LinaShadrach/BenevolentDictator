@@ -22,6 +22,10 @@
         <span class="trade">Normal</span>
     }
 </h4>
+<form id="TradeForm">
+    <input type="hidden" value="@Model.Id" name="nationId" />
+    <button>Toggle Trade Status</button>
+</form>
 
 <form class="PassTime">
     <input type="hidden" value="@Model.Id" name="nationId" />
@@ -43,6 +47,20 @@
                     $(".popResult").text(result.population);
                     $(".resResult").text(result.resources);
                     $(".staResult").text(result.stability);
+                }
+            })
+        });
+        $("#TradeForm").submit(function (event) {
+            event.preventDefault();
+            $.ajax({
+                type: 'POST',
+                data: $(this).serialize(),
+                url: '@Url.Action("ToggleTrade")',
+                datatype: "json",
+                success: function (result) {
+                    console.log(result.tradeHigh);
+                    $(".trade").text(result);
+                    
                 }
             })
         });

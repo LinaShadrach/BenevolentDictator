@@ -62,12 +62,23 @@ namespace BenevolentDictator.Models
         }
         public void PassTime()
         {
-            this.Population = this.Population + this.PopulationGain;
-            this.Resources = this.Resources + this.ResourceGain;
-            if (this.TradeHigh)
+            Population = Population + PopulationGain;
+            Resources = Resources + ResourceGain;
+            if (TradeHigh)
             {
-                this.Resources = this.Resources - (this.ResourceGain * 2);
-                this.Capital = this.Capital + this.ResourceGain;
+                Resources = Resources - (ResourceGain * 2);
+                Capital = Capital + ResourceGain;
+            }
+        }
+        public void ToggleTrade()
+        {
+            if (TradeHigh)
+            {
+                TradeHigh = false;
+            }
+            else
+            {
+                TradeHigh = true;
             }
         }
     }  
