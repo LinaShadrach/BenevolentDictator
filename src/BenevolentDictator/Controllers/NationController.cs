@@ -69,6 +69,7 @@ namespace BenevolentDictator.Controllers
         // GET: /<controller>/
         public IActionResult Create()
         {
+
             ViewBag.Governments = govRepo.Governments.ToList();
             ViewBag.Geographies = geoRepo.Geographies.ToList();
             ViewBag.Economies = econRepo.Economies.ToList();
@@ -76,44 +77,49 @@ namespace BenevolentDictator.Controllers
             Government newGov = govRepo.Governments.FirstOrDefault(g => g.Id == nation.GovernmentId);
             Geography newGeo = geoRepo.Geographies.FirstOrDefault(g => g.Id == nation.GeographyId);
             Economy newEcon = econRepo.Economies.FirstOrDefault(g => g.Id == nation.EconomyId);
+            nation.ApplicationUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Debug.WriteLine("user**********"+nation.ApplicationUserId);
+            Debug.WriteLine("user**********" + nation);
+
             nation.AddInitialStats(nation, newGov, newGeo, newEcon);
             nationRepo.Save(nation);
-            Nation thisNation = nationRepo.Nations
+            nation = nationRepo.Nations
                 .Include(n => n.Government)
                 .Include(n => n.Geography)
                 .Include(n => n.Economy)
+                .Include(n => n.ApplicationUser)
                 .FirstOrDefault(n => n.Id==nation.Id);
-            ViewBag.UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return View(thisNation);
+            return View(nation);
         }
-        public IActionResult AJAXCreate(string Name, int EconomyId, int GeographyId, int GovernmentId)
+        public IActionResult AJAXCreate(string Name, int nationId, int EconomyId, int GeographyId, int GovernmentId)
         {
-            Debug.WriteLine("ajax***********************"+GeographyId);
             Government newGov = govRepo.Governments.FirstOrDefault(g => g.Id == GovernmentId);
             Geography newGeo = geoRepo.Geographies.FirstOrDefault(g => g.Id == GeographyId);
             Economy newEcon = econRepo.Economies.FirstOrDefault(g => g.Id == EconomyId);
-            Nation nation = new Nation(Name, GovernmentId, EconomyId, GeographyId);
+            Nation nation = nationRepo.Nations.FirstOrDefault(n => n.Id == nationId);
+            nation.EconomyId = EconomyId;
+            nation.GeographyId = GeographyId;
+            nation.GovernmentId = GovernmentId;
             nation.AddInitialStats(nation, newGov, newGeo, newEcon);
-            nationRepo.Save(nation);
-            Nation thisNation = nationRepo.Nations
+            nationRepo.Edit(nation);
+            nation = nationRepo.Nations
                 .Include(n => n.Government)
                 .Include(n => n.Geography)
                 .Include(n => n.Economy)
-                .FirstOrDefault(n => n.Id == nation.Id);
-            Debug.WriteLine("ajaxjson***********************" + Json(thisNation));
+                .Include(n => n.ApplicationUser)
+                .FirstOrDefault(n => n.Id == nationId);
 
-            return Json(thisNation);
+            return Json(nation);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Nation nation, string ApplicationUserId)
+        public IActionResult Create(Nation nation, string ApplicationUserId)
         {
             Government newGov = govRepo.Governments.FirstOrDefault(g => g.Id == nation.GovernmentId);
             Geography newGeo = geoRepo.Geographies.FirstOrDefault(g => g.Id == nation.GeographyId);
             Economy newEcon = econRepo.Economies.FirstOrDefault(g => g.Id == nation.EconomyId);
-            nation.ApplicationUser = await _userManager.FindByIdAsync(ApplicationUserId);
             nation = nation.AddInitialStats(nation, newGov, newGeo, newEcon);
-            nationRepo.Save(nation);
+            nationRepo.Edit(nation);
 
             return RedirectToAction("Index");
         }

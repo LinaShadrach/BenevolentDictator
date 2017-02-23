@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,6 +38,8 @@ namespace BenevolentDictator.Models
         public Nation Edit(Nation nation)
         {
             db.Entry(nation).State = EntityState.Modified;
+            Debug.WriteLine(nation.Name);
+
             db.SaveChanges();
             return nation;
         }

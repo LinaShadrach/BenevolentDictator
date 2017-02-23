@@ -26,6 +26,8 @@ namespace BenevolentDictator.Models
         public int PopulationGain { get; set; }
         public int CapitalGain { get; set; }
         public bool TradeHigh { get; set; }
+        public string ApplicationUserId { get; set; }
+
         public virtual ApplicationUser ApplicationUser { get; set; }
         public Nation(string name, int governmentId, int economyId, int geographyId)
         {
