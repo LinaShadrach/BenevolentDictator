@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 
 namespace BenevolentDictator.Models
 {
@@ -37,6 +38,7 @@ namespace BenevolentDictator.Models
 
         public Nation AddInitialStats(Nation nation, Government newGov, Geography newGeo, Economy newEcon)
         {
+            Debug.WriteLine("***********************************"+nation.Name);
             nation.Capital = 1000;
             nation.Population = 1000;
             nation.Resources = 1000;
@@ -46,6 +48,10 @@ namespace BenevolentDictator.Models
             nation.PopulationGain = 100;
             nation.CapitalGain = 100;
             nation.TradeHigh = false;
+            //nation.Government = newGov;
+            //nation.Geography = newGeo;
+            //nation.Economy = newEcon;
+            
 
             float resourceFactor = (newEcon.ResourceFactor + newGeo.ResourceFactor) / 2;
             nation.Population = (int)Math.Floor(nation.Population * newGeo.PopulationFactor);
