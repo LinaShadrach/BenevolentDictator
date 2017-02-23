@@ -10,7 +10,6 @@
 <form asp-action="Create" asp-controller ="Nation" class="selectLists">
     <label asp-for="Name">Name: </label>
     <input type="text" asp-for="Name"/>
-    <input type="hidden" value="@Model.ApplicationUser.Id" for="ApplicationUserId"/>
     <input type="hidden" value="@Model.Id" name="nationId" />
     <select asp-for="GovernmentId"  >
         @foreach (var government in ViewBag.Governments)
@@ -36,13 +35,13 @@
 {
     <h3 asp-for="Name">@Model.Name</h3>
 }
-<h4><span class="geoResult">@Model.Geography.Name</span></h4>
-<h4><span class="govResult">@Model.Government.Name</span></h4>
-<h4><span class="econResult">@Model.Economy.Name</span></h4>
+<h4>Capital: <span class="capResult">@Model.Capital</span></h4>
+<h4>Population: <span class="popResult">@Model.Population</span></h4>
+<h4>Resources: <span class="resResult">@Model.Resources</span></h4>
+<h4>Stability: <span class="staResult">@Model.Stability</span></h4>
 <script>
     $(document).ready(function () {
         $(".selectLists").change(function () {
-        console.log($(this).serialize());
             $.ajax({
                 type: 'GET',
                 data: $(this).serialize(),
@@ -50,9 +49,10 @@
                 datatype: "json",
                 success: function (result) {
                     console.log(result);
-                    $(".geoResult").text(result.geography.name);
-                    $(".govResult").text(result.government.name);
-                    $(".econResult").text(result.economy.name);
+                    $(".capResult").text(result.capital);
+                    $(".popResult").text(result.population);
+                    $(".resResult").text(result.resources);
+                    $(".staResult").text(result.stability);
                 }
             })
         });

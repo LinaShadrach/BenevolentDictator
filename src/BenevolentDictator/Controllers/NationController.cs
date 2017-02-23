@@ -91,7 +91,7 @@ namespace BenevolentDictator.Controllers
                 .FirstOrDefault(n => n.Id==nation.Id);
             return View(nation);
         }
-        public IActionResult AJAXCreate(string Name, int nationId, int EconomyId, int GeographyId, int GovernmentId)
+        public IActionResult AJAXCreate(int nationId, int EconomyId, int GeographyId, int GovernmentId)
         {
             Government newGov = govRepo.Governments.FirstOrDefault(g => g.Id == GovernmentId);
             Geography newGeo = geoRepo.Geographies.FirstOrDefault(g => g.Id == GeographyId);
@@ -102,26 +102,32 @@ namespace BenevolentDictator.Controllers
             nation.GovernmentId = GovernmentId;
             nation.AddInitialStats(nation, newGov, newGeo, newEcon);
             nationRepo.Edit(nation);
-            nation = nationRepo.Nations
-                .Include(n => n.Government)
-                .Include(n => n.Geography)
-                .Include(n => n.Economy)
-                .Include(n => n.ApplicationUser)
-                .FirstOrDefault(n => n.Id == nationId);
+            nation = nationRepo.Nations.FirstOrDefault(n => n.Id == nationId);
 
             return Json(nation);
         }
 
         [HttpPost]
-        public IActionResult Create(Nation nation, string ApplicationUserId)
+        public IActionResult Create(int nationId, string Name)
         {
-            Government newGov = govRepo.Governments.FirstOrDefault(g => g.Id == nation.GovernmentId);
-            Geography newGeo = geoRepo.Geographies.FirstOrDefault(g => g.Id == nation.GeographyId);
-            Economy newEcon = econRepo.Economies.FirstOrDefault(g => g.Id == nation.EconomyId);
-            nation = nation.AddInitialStats(nation, newGov, newGeo, newEcon);
-            nationRepo.Edit(nation);
+            Nation thisNation = nationRepo.Nations.FirstOrDefault(n => n.Id == nationId);
+            thisNation.Name = Name;
+            nationRepo.Edit(thisNation);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { id = nationId });
+        }
+        public IActionResult Index(int id)
+        {
+            Nation thisNation = nationRepo.Nations.FirstOrDefault(n => n.Id == id);
+            return View(thisNation);
+        }
+        [HttpPost]
+        public IActionResult PassTime(int nationId)
+        {
+            Nation thisNation = nationRepo.Nations.FirstOrDefault(n => n.Id == nationId);
+            thisNation.PassTime();
+            nationRepo.Edit(thisNation);
+            return Json(thisNation);
         }
     }
 }

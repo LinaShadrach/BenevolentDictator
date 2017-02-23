@@ -1,8 +1,50 @@
 ﻿@{
     ViewData["Title"] = "Benevolent Dictator";
-    Layout = "~/Views/Shared/_Layout.cshtml"
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @model BenevolentDictator.Models.Nation
 
 <h2>The nation of @Model.Name</h2>
 
+<h3>Current Status:</h3>
+<h4>Capital: <span class="capResult">@Model.Capital</span></h4>
+<h4>Population: <span class="popResult">@Model.Population</span></h4>
+<h4>Resources: <span class="resResult">@Model.Resources</span></h4>
+<h4>Stability: <span class="staResult">@Model.Stability</span></h4>
+
+<h4>Trade Status: 
+    @if (Model.TradeHigh)
+    {
+        <span class="trade">High Trade</span>
+    }
+    else
+    {
+        <span class="trade">Normal</span>
+    }
+</h4>
+
+<form class="PassTime">
+    <input type="hidden" value="@Model.Id" name="nationId" />
+    <button>Pass Time...</button>
+</form>
+
+<script>
+    $(document).ready(function () {
+        $(".PassTime").submit(function (event) {
+            event.preventDefault();
+            $.ajax({
+                type: 'POST',
+                data: $(this).serialize(),
+                url: '@Url.Action("PassTime")',
+                datatype: "json",
+                success: function (result) {
+                    console.log(result);
+                    $(".capResult").text(result.capital);
+                    $(".popResult").text(result.population);
+                    $(".resResult").text(result.resources);
+                    $(".staResult").text(result.stability);
+                }
+            })
+        });
+    });
+</script>

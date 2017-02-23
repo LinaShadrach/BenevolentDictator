@@ -46,21 +46,29 @@ namespace BenevolentDictator.Models
             nation.Resources = 1000;
             nation.Stability = 100;
             nation.DisasterResistance = 1;
-            nation.ResourceGain = 100;
-            nation.PopulationGain = 100;
             nation.CapitalGain = 100;
-            nation.TradeHigh = false;
-            //nation.Government = newGov;
-            //nation.Geography = newGeo;
-            //nation.Economy = newEcon;
-            
+            nation.TradeHigh = false;            
 
             float resourceFactor = (newEcon.ResourceFactor + newGeo.ResourceFactor) / 2;
             nation.Population = (int)Math.Floor(nation.Population * newGeo.PopulationFactor);
             nation.Resources = (int)Math.Floor(nation.Resources * resourceFactor);
             nation.DisasterResistance = nation.DisasterResistance * newGov.DisasterFactor;
+            nation.Stability = (int) Math.Floor(nation.Stability * newGov.StabilityFactor);
+
+            nation.ResourceGain = (int) Math.Floor(100 * resourceFactor);
+            nation.PopulationGain = (int) Math.Floor(100 * newGeo.PopulationFactor);
 
             return (nation);
+        }
+        public void PassTime()
+        {
+            this.Population = this.Population + this.PopulationGain;
+            this.Resources = this.Resources + this.ResourceGain;
+            if (this.TradeHigh)
+            {
+                this.Resources = this.Resources - (this.ResourceGain * 2);
+                this.Capital = this.Capital + this.ResourceGain;
+            }
         }
     }  
 }
