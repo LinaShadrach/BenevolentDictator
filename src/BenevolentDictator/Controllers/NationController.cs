@@ -19,6 +19,7 @@ namespace BenevolentDictator.Controllers
         private IGovernmentRepository govRepo;
         private IGeographyRepository geoRepo;
         private IEconomyRepository econRepo;
+        private IEventRepository eventRepo;
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -28,7 +29,8 @@ namespace BenevolentDictator.Controllers
             INationRepository thisRepo = null, 
             IGovernmentRepository thisGovRepo = null,
             IGeographyRepository thisGeoRepo = null,
-            IEconomyRepository thisEconRepo = null)
+            IEconomyRepository thisEconRepo = null,
+            IEventRepository thisEventRepo = null)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -64,6 +66,14 @@ namespace BenevolentDictator.Controllers
             {
                 this.econRepo = thisEconRepo;
             }
+            if (thisEventRepo == null)
+            {
+                this.eventRepo = new EFEventRepository();
+            }
+            else
+            {
+                this.eventRepo = thisEventRepo;
+            }
         }
 
         // GET: /<controller>/
@@ -73,13 +83,11 @@ namespace BenevolentDictator.Controllers
             ViewBag.Governments = govRepo.Governments.ToList();
             ViewBag.Geographies = geoRepo.Geographies.ToList();
             ViewBag.Economies = econRepo.Economies.ToList();
-            Nation nation = new Nation("", 1, 2, 1);
+            Nation nation = new Nation("", 1, 5, 1);
             Government newGov = govRepo.Governments.FirstOrDefault(g => g.Id == nation.GovernmentId);
             Geography newGeo = geoRepo.Geographies.FirstOrDefault(g => g.Id == nation.GeographyId);
             Economy newEcon = econRepo.Economies.FirstOrDefault(g => g.Id == nation.EconomyId);
             nation.ApplicationUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            Debug.WriteLine("user**********"+nation.ApplicationUserId);
-            Debug.WriteLine("user**********" + nation);
 
             nation.AddInitialStats(nation, newGov, newGeo, newEcon);
             nationRepo.Save(nation);
@@ -125,6 +133,11 @@ namespace BenevolentDictator.Controllers
         public IActionResult PassTime(int nationId)
         {
             Nation thisNation = nationRepo.Nations.FirstOrDefault(n => n.Id == nationId);
+            int eventId = thisNation.CheckForEvent();
+            if(eventId!=0)
+            {
+                thisNation.EventHappens(eventRepo.Events.FirstOrDefault(e=>e.Id == eventId));
+            }
             thisNation.PassTime();
             nationRepo.Edit(thisNation);
             return Json(thisNation);
@@ -142,5 +155,6 @@ namespace BenevolentDictator.Controllers
             }
             return Json(result);
         }
+
     }
 }

@@ -40,7 +40,6 @@ namespace BenevolentDictator.Models
 
         public Nation AddInitialStats(Nation nation, Government newGov, Geography newGeo, Economy newEcon)
         {
-            Debug.WriteLine("***********************************"+nation.Name);
             nation.Capital = 1000;
             nation.Population = 1000;
             nation.Resources = 1000;
@@ -81,5 +80,29 @@ namespace BenevolentDictator.Models
                 TradeHigh = true;
             }
         }
+
+        public int CheckForEvent()
+        {
+            Random rnd = new Random();
+            int result = rnd.Next(100);
+            int eventId = 0;
+
+            if (result <= 15)
+            {
+                eventId=rnd.Next(7) + 1;
+            }
+            return eventId;
+        }
+        public void EventHappens(Event thisEvent)
+        {
+            Capital = (int)(Capital * (Convert.ToDouble(thisEvent.CapitalEffect) / 100));
+            Stability = (int)(Stability * (Convert.ToDouble(thisEvent.StabilityEffect)/100));
+            Population = (int)(Population * (Convert.ToDouble(thisEvent.PopulationEffect) / 100));
+            Resources = (int)(Resources * (Convert.ToDouble(thisEvent.ResourceEffect) / 100));
+            ResourceGain = (int)Math.Floor(ResourceGain * thisEvent.ResourceFactor);
+            PopulationGain = (int)Math.Floor(PopulationGain * thisEvent.PopulationFactor);
+        }
+
+
     }  
 }

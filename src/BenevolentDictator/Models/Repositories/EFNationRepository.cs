@@ -38,8 +38,6 @@ namespace BenevolentDictator.Models
         public Nation Edit(Nation nation)
         {
             db.Entry(nation).State = EntityState.Modified;
-            Debug.WriteLine(nation.Name);
-
             db.SaveChanges();
             return nation;
         }

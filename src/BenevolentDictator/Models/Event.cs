@@ -16,6 +16,5 @@ namespace BenevolentDictator.Models
         public float ResourceFactor { get; set; }
         public float PopulationFactor { get; set; }
 
-
     }
 }
