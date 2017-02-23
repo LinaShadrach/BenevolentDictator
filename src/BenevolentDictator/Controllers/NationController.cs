@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BenevolentDictator.Models;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -67,20 +68,15 @@ namespace BenevolentDictator.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Nation nationForm)
+        public IActionResult Create(Nation nation)
         {
-            Nation nation = new Models.Nation(nationForm.Name, nationForm.GovernmentId, nationForm.EconomyId, nationForm.GeographyId);
+            Government newGov = govRepo.Governments.FirstOrDefault(g => g.Id == nation.GovernmentId);
+            Geography newGeo = geoRepo.Geographies.FirstOrDefault(g => g.Id == nation.GeographyId);
+            Economy newEcon = econRepo.Economies.FirstOrDefault(g => g.Id == nation.EconomyId);
 
-            Government thisGovt = govRepo.Governments.FirstOrDefault(g => g.Id == nation.GovernmentId);
-            Economy thisEcon = econRepo.Economies.FirstOrDefault(e => e.Id == nation.EconomyId);
-            Geography thisGeo = geoRepo.Geographies.FirstOrDefault(g => g.Id == nation.GeographyId);
-
-            float resourceFactor = (thisEcon.ResourceFactor + thisGeo.ResourceFactor) / 2;
-            nation.Population = (int) Math.Floor(nation.Population * thisGeo.PopulationFactor);
-            nation.Resources = (int) Math.Floor(nation.Resources * resourceFactor);
-            nation.DisasterResistance = nation.DisasterResistance * thisGovt.DisasterFactor;
-
+            nation = nation.AddInitialStats(nation, newGov, newGeo, newEcon);
             nationRepo.Save(nation);
+
             return RedirectToAction("Index");
         }
     }

@@ -9,6 +9,7 @@
 <form asp-action="Create" asp-controller ="Nation">
     <label asp-for="Name">Name: </label>
     <input type="text" asp-for="Name"/>
+    <input type="hidden" 
     <select asp-for="GovernmentId">
         @foreach (var government in ViewBag.Governments)
         {
