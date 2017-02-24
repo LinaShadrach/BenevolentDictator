@@ -134,13 +134,25 @@ namespace BenevolentDictator.Controllers
         {
             Nation thisNation = nationRepo.Nations.FirstOrDefault(n => n.Id == nationId);
             int eventId = thisNation.CheckForEvent();
+            string message = "10 years passed!";
             if(eventId!=0)
             {
-                thisNation.EventHappens(eventRepo.Events.FirstOrDefault(e=>e.Id == eventId));
+                Event thisEvent = eventRepo.Events.FirstOrDefault(e => e.Id == eventId);
+                thisNation.EventHappens(thisEvent);
+                message += " and "+ thisEvent.Name + " happened";
             }
             thisNation.PassTime();
+            bool gameOver = thisNation.CheckGameOver();
             nationRepo.Edit(thisNation);
-            return Json(thisNation);
+            if(gameOver)
+            {
+                message += "and your country collasped!";
+            }
+            Dictionary<string, object> results = new Dictionary<string, object> () { };
+            results.Add("message", message);
+            results.Add("nation", thisNation);
+            results.Add("gameOver", gameOver);
+            return Json(results);
         }
         [HttpPost]
         public IActionResult ToggleTrade(int nationId)

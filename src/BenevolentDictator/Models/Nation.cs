@@ -102,7 +102,14 @@ namespace BenevolentDictator.Models
             ResourceGain = (int)Math.Floor(ResourceGain * thisEvent.ResourceFactor);
             PopulationGain = (int)Math.Floor(PopulationGain * thisEvent.PopulationFactor);
         }
-
-
+        public bool CheckGameOver()
+        {
+            bool gameOver = false;
+            if(Population> (Resources*3))
+            {
+                gameOver = true;
+            }
+            return gameOver;
+        }
     }  
 }

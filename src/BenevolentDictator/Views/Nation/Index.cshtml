@@ -22,16 +22,18 @@
         <span class="trade">Normal</span>
     }
 </h4>
-<form id="TradeForm">
-    <input type="hidden" value="@Model.Id" name="nationId" />
-    <button>Toggle Trade Status</button>
-</form>
+<div id="gameButtons">
+    <form id="TradeForm">
+        <input type="hidden" value="@Model.Id" name="nationId" />
+        <button>Toggle Trade Status</button>
+    </form>
 
-<form class="PassTime">
-    <input type="hidden" value="@Model.Id" name="nationId" />
-    <button>Pass Time...</button>
-</form>
-
+    <form class="PassTime">
+        <input type="hidden" value="@Model.Id" name="nationId" />
+        <button>Pass Time...</button>
+    </form>
+</div>
+<h2><span class="message"></span></h2>
 <script>
     $(document).ready(function () {
         $(".PassTime").submit(function (event) {
@@ -43,10 +45,15 @@
                 datatype: "json",
                 success: function (result) {
                     console.log(result);
-                    $(".capResult").text(result.capital);
-                    $(".popResult").text(result.population);
-                    $(".resResult").text(result.resources);
-                    $(".staResult").text(result.stability);                    
+                    $(".capResult").text(result.nation.capital);
+                    $(".popResult").text(result.nation.population);
+                    $(".resResult").text(result.nation.resources);
+                    $(".staResult").text(result.nation.stability);
+                    $(".message").text(result.message);
+                    if (result.gameOver)
+                    {
+                        $("#gameButtons").hide();
+                    }
                 }
             })
         });
